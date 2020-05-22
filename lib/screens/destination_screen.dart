@@ -14,6 +14,14 @@ class DestinationScreen extends StatefulWidget {
 }
 
 class _DestinationScreenState extends State<DestinationScreen> {
+  Text _buildRatingStars(int rating) {
+    String stars = '';
+    for (int i = 0; i < rating; i++) {
+      stars += '⭐ ';
+    }
+    return Text(stars);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +120,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
           ),
           Expanded(
             child: ListView.builder(
+              padding: EdgeInsets.only(top: 10, bottom: 15),
                 itemCount: widget.destination.activities.length,
                 itemBuilder: (BuildContext context, int index) {
                   Activity activity = widget.destination.activities[index];
@@ -124,42 +133,83 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(activity.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                                Text('\$${activity.price}', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
-                                Text('per pax', style: TextStyle(fontWeight: FontWeight.w600)),
-                              ],
-                            ),
-                            Text(activity.type),
-                            //_buildRatingStars(activity.rating),
-                            SizedBox(height: 10),
-                            Row(children: <Widget>[
-                              Container(
-                                width: 70,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).accentColor,
-                                    borderRadius: BorderRadius.circular(10)),
-                                alignment: Alignment.center,
-                                child: Text(activity.startTimes[0]),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(100, 20, 20, 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    width: 120,
+                                    child: Text(
+                                      activity.name,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text('\$${activity.price}',
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600)),
+                                      Text('per pax',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey)),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 10),
-                              Container(
-                                width: 70,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).accentColor,
-                                    borderRadius: BorderRadius.circular(10)),
-                                alignment: Alignment.center,
-                                child: Text(activity.startTimes[1]),
-                              ),
-                            ])
-                          ],
+                              Text(activity.type,
+                                  style: TextStyle(color: Colors.grey)),
+                              _buildRatingStars(activity.rating),
+                              SizedBox(height: 10),
+                              Row(children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).accentColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  alignment: Alignment.center,
+                                  child: Text(activity.startTimes[0]),
+                                ),
+                                SizedBox(width: 10),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).accentColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  alignment: Alignment.center,
+                                  child: Text(activity.startTimes[1]),
+                                ),
+                              ])
+                            ],
+                          ),
                         ),
-                      )
+                      ),
+                      Positioned(
+                        left: 20.0,
+                        top: 15,
+                        bottom: 15,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image(
+                            width: 110,
+                            image: AssetImage(activity.imageUrl), fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 }),
