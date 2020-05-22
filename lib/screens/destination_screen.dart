@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_travel_app/models/activity_model.dart';
 import 'package:flutter_travel_app/models/destination_model.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DestinationScreen extends StatefulWidget {
   final Destination destination;
@@ -29,15 +31,138 @@ class _DestinationScreenState extends State<DestinationScreen> {
                           offset: Offset(0, 2),
                           blurRadius: 6)
                     ]),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image(
-                    image: AssetImage(widget.destination.imageUrl),
-                    fit: BoxFit.cover,
+                child: Hero(
+                  tag: widget.destination.imageUrl,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image(
+                      image: AssetImage(widget.destination.imageUrl),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              )
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        iconSize: 30,
+                        color: Colors.black,
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      Row(children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.search),
+                          iconSize: 30,
+                          color: Colors.black,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        IconButton(
+                          icon: Icon(FontAwesomeIcons.sortAmountDown),
+                          iconSize: 30,
+                          color: Colors.black,
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ]),
+                    ]),
+              ),
+              Positioned(
+                left: 20.0,
+                bottom: 20.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      widget.destination.city,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 35.0,
+                          letterSpacing: 1.2),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(FontAwesomeIcons.locationArrow,
+                            size: 15.0, color: Colors.white70),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          widget.destination.country,
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 20.0),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                  right: 20.0,
+                  bottom: 20.0,
+                  child: Icon(
+                    Icons.location_on,
+                    color: Colors.white70,
+                    size: 25.0,
+                  ))
             ],
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: widget.destination.activities.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Activity activity = widget.destination.activities[index];
+                  return Stack(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(40, 5, 20, 5),
+                        height: 170,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(activity.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                                Text('\$${activity.price}', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+                                Text('per pax', style: TextStyle(fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                            Text(activity.type),
+                            //_buildRatingStars(activity.rating),
+                            SizedBox(height: 10),
+                            Row(children: <Widget>[
+                              Container(
+                                width: 70,
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).accentColor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                alignment: Alignment.center,
+                                child: Text(activity.startTimes[0]),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 70,
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).accentColor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                alignment: Alignment.center,
+                                child: Text(activity.startTimes[1]),
+                              ),
+                            ])
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                }),
           )
         ],
       ),
